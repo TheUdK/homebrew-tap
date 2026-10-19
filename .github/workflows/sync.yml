@@ -1,0 +1,52 @@
+name: sync with homebrew/core
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Daily, shortly after homebrew/core's own bump window.
+    - cron: "30 20 * * *"
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Set up Homebrew
+        uses: Homebrew/actions/setup-homebrew@a657b8b0cd35d0f65cce41fce9b24cf054b49869 # 2026.08.24.1
+
+      - uses: actions/checkout@v5
+
+      - name: Re-point formula at core openssh + matching Debian patch
+        id: sync
+        run: ./bin/sync-with-core
+
+      - name: Open pull request
+        if: steps.sync.outputs.version != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.sync.outputs.version }}
+          PREVIOUS: ${{ steps.sync.outputs.previous }}
+          DEBIAN_TAG: ${{ steps.sync.outputs.debian_tag }}
+        run: |
+          branch="sync/openssh-$VERSION"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git commit -am "openssh-gssapi $VERSION"
+          git push -u origin "$branch"
+          gh pr create \
+            --title "openssh-gssapi $VERSION" \
+            --body "Tracks homebrew/core openssh \`$VERSION\` (was \`$PREVIOUS\`).
+
+          GSS-API patch taken from Debian \`src:openssh-gssapi\` tag \`$DEBIAN_TAG\`.
+
+          Merge only once \`brew test-bot\` is green -- a red build means the
+          patch no longer applies and Debian's rebase needs checking."
