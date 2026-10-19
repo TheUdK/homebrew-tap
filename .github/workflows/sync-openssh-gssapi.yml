@@ -1,4 +1,4 @@
-name: sync with homebrew/core
+name: sync openssh-gssapi with homebrew/core
 
 on:
   workflow_dispatch:
@@ -26,7 +26,7 @@ jobs:
 
       - name: Re-point formula at core openssh + matching Debian patch
         id: sync
-        run: ./bin/sync-with-core
+        run: ./bin/sync-openssh-gssapi
 
       - name: Open pull request
         if: steps.sync.outputs.version != ''
