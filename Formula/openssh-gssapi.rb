@@ -1,10 +1,10 @@
 class OpensshGssapi < Formula
   desc "OpenSSH with Debian's GSS-API authentication and key exchange patch"
   homepage "https://www.openssh.com/"
-  url "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-10.5p1.tar.gz"
-  mirror "https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-10.5p1.tar.gz"
-  version "10.5p1"
-  sha256 "d44d28a839ea9daf969cc69150fde59910b2b39361dad81a3bd6cbd19218db11"
+  url "https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-10.6p2.tar.gz"
+  mirror "https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-10.6p2.tar.gz"
+  version "10.6p2"
+  sha256 "9ae44872090cf2f06b3cf9ff147e7f16f309671340763ed2f99248398ae29d5b"
   license "SSH-OpenSSH"
   compatibility_version 1
 
@@ -43,8 +43,8 @@ class OpensshGssapi < Formula
   end
 
   patch do
-    url "https://salsa.debian.org/ssh-team/openssh-gssapi/-/raw/debian/1%2510.5p1-1/debian/patches/gssapi.patch"
-    sha256 "77f3142977148c28f08d583f9d45a15f7810d02dca4d66bb7d7193b7005ee397"
+    url "https://salsa.debian.org/ssh-team/openssh-gssapi/-/raw/debian/1%2510.6p2-1/debian/patches/gssapi.patch"
+    sha256 "3f664fc3a114531df2c7d70046c77505e17d9370241cdb974b2e20fa63b6851f"
   end
 
   # The patch edits configure.ac but not the generated configure/config.h.in.
